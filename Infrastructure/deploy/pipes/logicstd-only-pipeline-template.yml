@@ -1,29 +1,69 @@
 # ------------------------------------------------------------------------------------------------------------------------
-# Pipeline Template to build logic apps application and deploy it to multiple optional environments
+# Pipeline to deploy Logic Application to existing Function App
 # ------------------------------------------------------------------------------------------------------------------------
-parameters:
-- name: environments
-  type: object
-  default: ['DEV'] # or ['DEV','QA'] or ['DEV','QA','PROD'] or ['DEV','QA','STG','PROD']
-- name: variableGroupName
-  default: 'myVariableGroupName'
+# Note: This pipeline needs a variable group "LogicAppDemo"
+#  See ../Docs/Create-Variable-Group.md for details
+# ------------------------------------------------------------------------------------------------------------------------
+name: $(date:yyyy).$(date:MM).$(date:dd)$(rev:.r)
+pool:
+  vmImage: "ubuntu-latest"
 
 # ----------------------------------------------------------------------------------------------------
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - Workflows/*
+
+variables:
+  devVariableGroup: "LogicAppDemo-Dev"
+  devEnvName: "dev"
+  qaVariableGroup: "LogicAppDemo-QA"
+  qaEnvName: "qa"
+
+# ----------------------------------------------------------------------------------------------------
+
 stages:
-- stage: BuildApplication
-  displayName: Build Application
-  jobs:
-  - template: templates/build-logicstd-template.yml
-    parameters:
-      variableGroupName: ${{ parameters.variableGroupName }}
-      environmentName: 'DEV'
-
-# ----------------------------------------------------------------------------------------------------
-- ${{ each environmentName in parameters.environments }} :
-  - stage: DeployApp${{ environmentName }}
-    displayName: Deploy ${{ environmentName }} Application
+  - stage: BuildDev
+    variables:
+      - group: ${{ variables.devVariableGroup }}
+    displayName: "Build Dev"
     jobs:
-    - template: templates/deploy-logicstd-template.yml
-      parameters:
-        variableGroupName: ${{ parameters.variableGroupName }}
-        environmentName: ${{ environmentName }}
+      - template: templates/build-logicstd-template.yml
+        parameters:
+          variableGroupName: ${{ variables.devVariableGroup }}
+          environmentName: ${{ variables.devEnvName }}
+
+  - stage: DeployDev
+    variables:
+      - group: ${{ variables.devVariableGroup }}
+    displayName: "Deploy Dev"
+    jobs:
+      - template: templates/deploy-logicstd-template.yml
+        parameters:
+          variableGroupName: ${{ variables.devVariableGroup }}
+          environmentName: ${{ variables.devEnvName }}
+
+  # ----------------------------------------------------------------------------------------------------
+
+  - stage: BuildQa
+    variables:
+      - group: ${{ variables.qaVariableGroup }}
+    displayName: "Build QA"
+    jobs:
+      - template: templates/build-logicstd-template.yml
+        parameters:
+          variableGroupName: ${{ variables.qaVariableGroup }}
+          environmentName: ${{ variables.qaEnvName }}
+
+  - stage: DeployQa
+    variables:
+      - group: ${{ variables.qaVariableGroup }}
+    displayName: "Deploy QA"
+    jobs:
+      - template: templates/deploy-logicstd-template.yml
+        parameters:
+          variableGroupName: ${{ variables.qaVariableGroup }}
+          environmentName: ${{ variables.qaEnvName }}

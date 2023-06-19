@@ -1,20 +1,35 @@
-# ------------------------------------------------------------------------------------------------------------------------
-# Pipeline Template to deploy Azure Resources Only
-# ------------------------------------------------------------------------------------------------------------------------
+name: $(date:yyyy).$(date:MM).$(date:dd)$(rev:.r)
+pool:
+  vmImage: "ubuntu-latest"
+
+# ----------------------------------------------------------------------------------------------------
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - "Infrastructure/**/*.yml"
+      - "Infrastructure/**/*.bicep"
+
+# ----------------------------------------------------------------------------------------------------
 parameters:
-- name: environments
-  type: object
-  default: ['DEV'] # or ['DEV','QA'] or ['DEV','QA','PROD'] or ['DEV','QA','STG','PROD']
-- name: variableGroupName
-  default: 'myVariableGroupName'
+  - name: environment
+    displayName: Variable Group
+    type: string
+    default: LogicAppDemo-Dev
+    values:
+      - LogicAppDemo-Dev
+      - LogicAppDemo-QA
 
 # ----------------------------------------------------------------------------------------------------
 stages:
-- ${{ each environmentName in parameters.environments }} :
-  - stage: CreateInfrastructure${{ environmentName }}
-    displayName: ${{ environmentName }} Infrastructure
+  - stage: CreateInfrastructure
+    variables:
+      - group: ${{ parameters.environment }}
+    displayName: "Create Infrastructure ${{ parameters.environment }}"
     jobs:
-    - template: templates/create-infra-template.yml
-      parameters:
-        variableGroupName: ${{ parameters.variableGroupName }}
-        environmentName: ${{ environmentName }}
+      - template: templates/create-infra-template.yml
+        parameters:
+          variableGroupName: ${{ parameters.environment }}
+          # environmentName: $(envTag)

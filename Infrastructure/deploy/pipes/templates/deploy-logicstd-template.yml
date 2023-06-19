@@ -13,7 +13,7 @@ parameters:
 
 # ----------------------------------------------------------------------------------------------------
 jobs:
-- deployment: Deploy${{ parameters.environmentName }}LogicApp
+- deployment: DeployLogicApp
   displayName: Initialize ${{ parameters.environmentName }} Deploy LogicApp
   environment: ${{ parameters.environmentName }}
 
@@ -22,9 +22,9 @@ jobs:
     - name: environmentNameLower
       value: ${{ lower(parameters.environmentName) }}
     - name: artifactFolderName
-      value: 'App'
+      value: 'App-${{ parameters.environmentName }}'
     - name: artifactName
-      value: 'LA.zip'
+      value: 'LA-${{ parameters.environmentName }}.zip'
     - name: triggerFrequency
       value: ${{ parameters.triggerFrequency }}
 

@@ -9,19 +9,19 @@ parameters:
 
 # ------------------------------------------------------------------------------------------------------------------------
 jobs:
-- deployment: Build${{ parameters.environmentName }}Application
-  displayName: Initialize ${{ parameters.environmentName }}Build App
+- deployment: BuildApplication
+  displayName: Initialize ${{ parameters.environmentName }} Build App
   environment: ${{ parameters.environmentName }}
 
-- job: Build${{ parameters.environmentName }}LogicApp
+- job: BuildLogicApp
   displayName: Build ${{ parameters.environmentName }} Application
 
   variables:
     - group: ${{ parameters.variableGroupName }}
     - name: artifactFolderName
-      value: 'App'
+      value: 'App-${{ parameters.environmentName }}'
     - name: artifactName
-      value: 'LA.zip'
+      value: 'LA-${{ parameters.environmentName }}.zip'
 
   steps:
   - task: CmdLine@2
