@@ -118,7 +118,7 @@ The pipelines in this project are customized using an Azure DevOps Variable Grou
 Two separate CI and CD pipelines have been created. Edit the "environments:" variable in the pipeline to specify which environments that should be deployed.
 
 - [App only pipeline](Infrastructure/deploy/pipes/logicstd-only-pipeline-template.yml)
-- [Infra only pipeline](Infrastructure/deploy/infra-only-pipeline-template.yml)
+- [Infra only pipeline](Infrastructure/deploy/pipes/infra-only-pipeline-template.yml)
 
 > Instructions on how to set up an Azure DevOps pipeline can be found in the [Create Pipelines](Infrastructure/docs/Create-Pipeline.md) document.
 
