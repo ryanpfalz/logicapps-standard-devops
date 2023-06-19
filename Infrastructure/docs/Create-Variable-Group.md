@@ -25,4 +25,5 @@ These commands actually create the variable groups:
         region='eastus' 
         longAppName='logic-std-demo'
         shortAppName='logstddemo'
+        envTag='demo'
 ```
