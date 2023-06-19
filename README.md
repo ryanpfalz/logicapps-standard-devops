@@ -111,14 +111,14 @@ The pipelines in this project are customized using an Azure DevOps Variable Grou
 
 #### 4. Azure Devops Pipelines
 
-A CICD pipeline has been created that combines the CI and CD into one pipeline and deploys one (or more) environment(s) and the application quickly and easily. Edit the "environments:" variable in the pipeline to specify which environments that should be deployed.
+<!-- A CICD pipeline has been created that combines the CI and CD into one pipeline and deploys one (or more) environment(s) and the application quickly and easily. Edit the "environments:" variable in the pipeline to specify which environments that should be deployed.
 
-- [infra-and-app-pipeline.yml](Infrastructure/deploy/infra-and-app-pipeline.yml)
+<!-- - [infra-and-app-pipeline.yml](Infrastructure/deploy/infra-and-app-pipeline.yml) -->
 
-As an alternative, two separate CI and CD pipelines have been created. Edit the "environments:" variable in the pipeline to specify which environments that should be deployed.
+Two separate CI and CD pipelines have been created. Edit the "environments:" variable in the pipeline to specify which environments that should be deployed.
 
-- [app-only-pipeline.yml](Infrastructure/deploy/app-only-pipeline.yml)
-- [infra-only-pipeline.yml](Infrastructure/deploy/infra-only-pipeline.yml)
+- [App only pipeline](Infrastructure/deploy/pipes/logicstd-only-pipeline-template.yml)
+- [Infra only pipeline](Infrastructure/deploy/infra-only-pipeline-template.yml)
 
 > Instructions on how to set up an Azure DevOps pipeline can be found in the [Create Pipelines](Infrastructure/docs/Create-Pipeline.md) document.
 
