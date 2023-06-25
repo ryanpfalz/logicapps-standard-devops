@@ -62,4 +62,4 @@ jobs:
             appName: $(logic_app_name)
             package: '$(Pipeline.Workspace)/$(artifactFolderName)/$(artifactName)'
             deploymentMethod: 'zipDeploy'
-            AppSettings: '-TRIGGER_FREQUENCY $(triggerFrequency)'
+            # AppSettings: '-TRIGGER_FREQUENCY $(triggerFrequency)'

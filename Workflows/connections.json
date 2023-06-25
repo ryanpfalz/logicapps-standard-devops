@@ -1,21 +1,45 @@
 {
   "managedApiConnections": {
-    "azureblob": {
+    "service-now": {
       "api": {
-        "id": "/subscriptions/51274a9c-b1ad-4d34-8ffe-0ba858eee00f/providers/Microsoft.Web/locations/eastus/managedApis/azureblob"
+        "id": "/subscriptions/f239cc10-791b-4e6c-b835-ac4c0b77dbbe/providers/Microsoft.Web/locations/centralus/managedApis/service-now"
       },
       "connection": {
-        "id": "/subscriptions/51274a9c-b1ad-4d34-8ffe-0ba858eee00f/resourceGroups/rutzsco-demo-logic-app-dev/providers/Microsoft.Web/connections/rutzscodemolablobdev-blobconnection"
+        "id": "/subscriptions/f239cc10-791b-4e6c-b835-ac4c0b77dbbe/resourceGroups/exampleLARG2/providers/Microsoft.Web/connections/service-now"
       },
-      "connectionRuntimeUrl": "https://08323eb57c5aa963.01.common.logic-eastus.azure-apihub.net/apim/azureblob/f907251c14e44120b7bdf68c5c1f210b",
-      "connectionProperties": {
-        "authentication": {
-          "audience": "https://storage.azure.com/",
-          "type": "ManagedServiceIdentity"
-        }
-      },
+      "connectionRuntimeUrl": "https://acd6863229565fd4.00.common.logic-centralus.azure-apihub.net/apim/service-now/c876b2d19f0d46409998bd0374fffca6/",
       "authentication": {
-        "type": "ManagedServiceIdentity"
+        "type": "Raw",
+        "scheme": "Key",
+        "parameter": "@appsetting('service-now-connectionKey')"
+      }
+    },
+    "visualstudioteamservices": {
+      "api": {
+        "id": "/subscriptions/f239cc10-791b-4e6c-b835-ac4c0b77dbbe/providers/Microsoft.Web/locations/centralus/managedApis/visualstudioteamservices"
+      },
+      "connection": {
+        "id": "/subscriptions/f239cc10-791b-4e6c-b835-ac4c0b77dbbe/resourceGroups/exampleLARG2/providers/Microsoft.Web/connections/visualstudioteamservices"
+      },
+      "connectionRuntimeUrl": "https://acd6863229565fd4.00.common.logic-centralus.azure-apihub.net/apim/visualstudioteamservices/c8e3805844a04dfeacd05cd2846381b4/",
+      "authentication": {
+        "type": "Raw",
+        "scheme": "Key",
+        "parameter": "@appsetting('visualstudioteamservices-connectionKey')"
+      }
+    },
+    "keyvault": {
+      "api": {
+        "id": "/subscriptions/f239cc10-791b-4e6c-b835-ac4c0b77dbbe/providers/Microsoft.Web/locations/centralus/managedApis/keyvault"
+      },
+      "connection": {
+        "id": "/subscriptions/f239cc10-791b-4e6c-b835-ac4c0b77dbbe/resourceGroups/exampleLARG2/providers/Microsoft.Web/connections/keyvault"
+      },
+      "connectionRuntimeUrl": "https://acd6863229565fd4.00.common.logic-centralus.azure-apihub.net/apim/keyvault/98bbd0ecedac489eb900bf9306b5cb3b/",
+      "authentication": {
+        "type": "Raw",
+        "scheme": "Key",
+        "parameter": "@appsetting('keyvault-connectionKey')"
       }
     }
   }

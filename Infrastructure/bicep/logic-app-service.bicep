@@ -5,9 +5,9 @@ param lowerAppPrefix string = ''
 param longAppName string = ''
 param shortAppName string = ''
 
-param blobStorageConnectionRuntimeUrl string = ''
-param blobStorageConnectionName string = ''
-param blobStorageAccountName string = ''
+// param blobStorageConnectionRuntimeUrl string = ''
+// param blobStorageConnectionName string = ''
+// param blobStorageAccountName string = ''
 param environment string = 'DEV'
 param logwsid string = ''
 param minimumElasticSize int = 1
@@ -153,18 +153,18 @@ resource logicAppSiteResource 'Microsoft.Web/sites@2021-02-01' = {
           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
           value: appInsightsResource.properties.ConnectionString
         }
-        {
-          name: 'BLOB_CONNECTION_RUNTIMEURL'
-          value: blobStorageConnectionRuntimeUrl
-        }
-        {
-          name: 'BLOB_STORAGE_CONNECTION_NAME'
-          value: blobStorageConnectionName
-        }
-        {
-          name: 'BLOB_STORAGE_ACCOUNT_NAME'
-          value: blobStorageAccountName
-        }
+        // {
+        //   name: 'BLOB_CONNECTION_RUNTIMEURL'
+        //   value: blobStorageConnectionRuntimeUrl
+        // }
+        // {
+        //   name: 'BLOB_STORAGE_CONNECTION_NAME'
+        //   value: blobStorageConnectionName
+        // }
+        // {
+        //   name: 'BLOB_STORAGE_ACCOUNT_NAME'
+        //   value: blobStorageAccountName
+        // }
         {
           name: 'WORKFLOWS_SUBSCRIPTION_ID'
           value: subscription().subscriptionId
@@ -188,6 +188,6 @@ resource logicAppSiteResource 'Microsoft.Web/sites@2021-02-01' = {
 // --------------------------------------------------------------------------------
 output name string = logicAppSiteResource.name
 output id string = logicAppSiteResource.id
-output managedIdentityPrincipalId string = logicAppSiteResource.identity.principalId
+// output managedIdentityPrincipalId string = logicAppSiteResource.identity.principalId
 
 output planName string = logicAppPlanResource.name

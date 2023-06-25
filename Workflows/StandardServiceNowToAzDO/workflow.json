@@ -1,0 +1,157 @@
+{
+  "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "actions": {
+          "For_each": {
+              "type": "Foreach",
+              "foreach": "@body('Get_query_results')?['value']",
+              "actions": {
+                  "Append_to_array_variable": {
+                      "type": "AppendToArrayVariable",
+                      "inputs": {
+                          "name": "AzDoBugs",
+                          "value": "@item()?['System.Title']"
+                      }
+                  }
+              },
+              "runAfter": {
+                  "Get_secret": [
+                      "SUCCEEDED"
+                  ]
+              }
+          },
+          "For_each_2": {
+              "type": "Foreach",
+              "foreach": "@body('List_Records')?['result']",
+              "actions": {
+                  "Condition": {
+                      "type": "If",
+                      "expression": {
+                          "and": [
+                              {
+                                  "not": {
+                                      "contains": [
+                                          "@variables('AzDoBugs')",
+                                          "@item()?['number']"
+                                      ]
+                                  }
+                              }
+                          ]
+                      },
+                      "actions": {
+                          "Create_a_work_item": {
+                              "type": "ApiConnection",
+                              "inputs": {
+                                  "host": {
+                                      "connection": {
+                                          "referenceName": "visualstudioteamservices"
+                                      }
+                                  },
+                                  "method": "patch",
+                                  "body": {
+                                      "title": "@item()?['number']"
+                                  },
+                                  "path": "/@{encodeURIComponent('Test Project')}/_apis/wit/workitems/$Bug",
+                                  "queries": {
+                                      "account": "ryanpfalz"
+                                  }
+                              }
+                          }
+                      },
+                      "else": {
+                          "actions": {}
+                      }
+                  }
+              },
+              "runAfter": {
+                  "For_each": [
+                      "Succeeded"
+                  ]
+              }
+          },
+          "Initialize_variable": {
+              "type": "InitializeVariable",
+              "inputs": {
+                  "variables": [
+                      {
+                          "name": "AzDoBugs",
+                          "type": "array"
+                      }
+                  ]
+              },
+              "runAfter": {
+                  "Get_query_results": [
+                      "SUCCEEDED"
+                  ]
+              }
+          },
+          "List_Records": {
+              "type": "ApiConnection",
+              "inputs": {
+                  "host": {
+                      "connection": {
+                          "referenceName": "service-now"
+                      }
+                  },
+                  "method": "get",
+                  "path": "/api/now/v2/table/@{encodeURIComponent('incident')}",
+                  "queries": {
+                      "sysparm_display_value": false,
+                      "sysparm_exclude_reference_link": true
+                  }
+              },
+              "runAfter": {}
+          },
+          "Get_query_results": {
+              "type": "ApiConnection",
+              "inputs": {
+                  "host": {
+                      "connection": {
+                          "referenceName": "visualstudioteamservices"
+                      }
+                  },
+                  "method": "get",
+                  "path": "/v2/@{encodeURIComponent('Test Project')}/queryResults/@{encodeURIComponent('5a8ae3b3-706c-4a44-86f0-f2b2422a9d35')}",
+                  "queries": {
+                      "account": "ryanpfalz",
+                      "workItemsCount": 200
+                  }
+              },
+              "runAfter": {
+                  "List_Records": [
+                      "Succeeded"
+                  ]
+              },
+              "metadata": {
+                  "5a8ae3b3-706c-4a44-86f0-f2b2422a9d35": "My Queries/BugQuery"
+              }
+          },
+          "Get_secret": {
+              "type": "ApiConnection",
+              "inputs": {
+                  "host": {
+                      "connection": {
+                          "referenceName": "keyvault"
+                      }
+                  },
+                  "method": "get",
+                  "path": "/secrets/@{encodeURIComponent('test1')}/value"
+              },
+              "runAfter": {
+                  "Initialize_variable": [
+                      "Succeeded"
+                  ]
+              }
+          }
+      },
+      "contentVersion": "1.0.0.0",
+      "outputs": {},
+      "triggers": {
+          "When_a_HTTP_request_is_received": {
+              "type": "Request",
+              "kind": "Http"
+          }
+      }
+  },
+  "kind": "Stateful"
+}

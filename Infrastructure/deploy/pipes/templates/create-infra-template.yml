@@ -6,6 +6,10 @@ parameters:
     default: ""
   # - name: environmentName
   #   default: 'DEV'
+  # - name: servicePrincipalName
+  #   default: ""
+  - name: resourceGroupName
+    default: ""
   - name: templateFolderName
     default: "Infrastructure/bicep"
   - name: templateFileName
@@ -32,14 +36,16 @@ jobs:
       # - name: resourceGroupSuffix
       #   value: ${{ replace(variables.resourceGroupSuffixBase, '_prod', '') }}
 
+          # resourceGroupName=$(echo "$(appPrefix)-$(longAppName)-$(envTag)" | tr '[:upper:]' '[:lower:]')
+          #           resourceGroupName=${{ parameters.resourceGroupName }}
+          # echo "resourceGroupName=$resourceGroupName"
+          # echo "##vso[task.setvariable variable=resourceGroupName]$resourceGroupName"
     steps:
       - bash: |
           appPrefixLower=$(echo "$(appPrefix)" | tr '[:upper:]' '[:lower:]')
           echo "##vso[task.setvariable variable=appPrefixLower]$appPrefixLower"
 
-          resourceGroupName=$(echo "$(appPrefix)-$(longAppName)-$(envTag)" | tr '[:upper:]' '[:lower:]')
-          echo "resourceGroupName=$resourceGroupName"
-          echo "##vso[task.setvariable variable=resourceGroupName]$resourceGroupName"
+
 
           runDateTime=$(echo $(date '+%Y%m%d-%H%M%S'))
           echo "##vso[task.setvariable variable=runDateTime]$runDateTime"
@@ -51,7 +57,7 @@ jobs:
           # echo "environmentNameLower=$(environmentNameLower)"
           echo "resourceGroupSuffixBase=$(resourceGroupSuffixBase)"
           echo "resourceGroupSuffix=$(resourceGroupSuffix)"
-          echo "resourceGroupName=$(resourceGroupName)"
+          echo "resourceGroupName=${{ parameters.resourceGroupName }}"
           echo "azureSubscription=$(azureSubscription)"
           echo "region=$(region)"
           echo "orgPrefix=$(orgPrefix)"
@@ -68,7 +74,29 @@ jobs:
           azureSubscription: $(azureSubscription)
           scriptType: bash
           scriptLocation: inlineScript
-          inlineScript: az group create --name $(resourceGroupName) --location $(region) --tags LastDeployed=$(runDateTime) Organization=$(orgPrefix) Application=$(appPrefix) # Environment=$(environmentNameUpper)
+          inlineScript: az group create --name ${{ parameters.resourceGroupName }} --location $(region) --tags LastDeployed=$(runDateTime) Organization=$(orgPrefix) Application=$(appPrefix) # Environment=$(environmentNameUpper)
+
+      # add service principal as owner to resource group
+      # https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-cli-v2?view=azure-pipelines&viewFallbackFrom=azure-devops#task-inputs
+
+      # - pwsh: |
+      #     $principalId=$(az ad sp list --filter "displayName eq '${{ parameters.variableGroupName }}'" --query '[].id' -o tsv)
+      #     Write-Host $principalId
+      #     az role assignment create --assignee $($principalId) --role "Owner" --resource-group $($resourceGroupName)
+      #   displayName: "Add SP to RG"
+      #   continueOnError: false
+      
+      # - task: AzureCLI@2
+      #   displayName: "Add SP to RG"
+      #   inputs:
+      #     azureSubscription: $(azureSubscription)
+      #     scriptType: pscore
+      #     scriptLocation: inlineScript
+      #     inlineScript: |
+      #       Write-Host ${{ parameters.servicePrincipalName }}
+      #       $principalId=$(az ad sp list --filter "displayName eq '${{ parameters.servicePrincipalName }}'" --query '[].id' -o tsv)
+      #       Write-Host $principalId
+      #       az role assignment create --assignee $($principalId) --role "Owner" --resource-group ${{ parameters.resourceGroupName }}
 
       - task: AzureResourceManagerTemplateDeployment@3
         displayName: "Publish Bicep Resources"
@@ -82,7 +110,7 @@ jobs:
           deploymentScope: "Resource Group"
           azureResourceManagerConnection: $(azureSubscription)
           action: "Create Or Update Resource Group"
-          resourceGroupName: "$(resourceGroupName)"
+          resourceGroupName: "${{ parameters.resourceGroupName }}"
           location: "$(region)"
           templateLocation: "Linked artifact"
           deploymentMode: "Incremental"

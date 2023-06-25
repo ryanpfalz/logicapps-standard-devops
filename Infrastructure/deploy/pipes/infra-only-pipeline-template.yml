@@ -21,6 +21,14 @@ parameters:
     values:
       - LogicAppDemo-Dev
       - LogicAppDemo-QA
+  # - name: servicePrincipalName
+  #   type: string
+  #   displayName: Service Principal Name
+  #   default: WebAppMVP
+  - name: resourceGroupName
+    type: string
+    displayName: Resource Group Name
+    default: ""
 
 # ----------------------------------------------------------------------------------------------------
 stages:
@@ -32,4 +40,6 @@ stages:
       - template: templates/create-infra-template.yml
         parameters:
           variableGroupName: ${{ parameters.environment }}
+          resourceGroupName: ${{ parameters.resourceGroupName }}
+          # servicePrincipalName: ${{ parameters.servicePrincipalName }}
           # environmentName: $(envTag)

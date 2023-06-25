@@ -1,20 +1,46 @@
 {
   "managedApiConnections": {
-    "azureblob": {
+    "service-now": {
       "api": {
-        "id": "/subscriptions/@appsetting('WORKFLOWS_SUBSCRIPTION_ID')/providers/Microsoft.Web/locations/@appsetting('WORKFLOWS_LOCATION_NAME')/managedApis/azureblob"
+        "id": "/subscriptions/@appsetting('WORKFLOWS_SUBSCRIPTION_ID')/providers/Microsoft.Web/locations/@appsetting('WORKFLOWS_LOCATION_NAME')/managedApis/service-now"
       },
       "connection": {
-        "id": "/subscriptions/@appsetting('WORKFLOWS_SUBSCRIPTION_ID')/resourceGroups/@appsetting('WORKFLOWS_RESOURCE_GROUP_NAME')/providers/Microsoft.Web/connections/@appsetting('BLOB_STORAGE_CONNECTION_NAME')"
+        "id": "/subscriptions/@appsetting('WORKFLOWS_SUBSCRIPTION_ID')/resourceGroups/@appsetting('WORKFLOWS_RESOURCE_GROUP_NAME')/providers/Microsoft.Web/connections/@appsetting('SERVICENOW_CONNECTION_NAME')"
       },
-      "connectionRuntimeUrl": "@appsetting('BLOB_CONNECTION_RUNTIMEURL')",
-      "connectionProperties": {
-        "authentication": {
-          "audience": "https://storage.azure.com/",
-          "type": "ManagedServiceIdentity"
-        }
+      "connectionRuntimeUrl": "@appsetting('SERVICENOW_CONNECTION_RUNTIMEURL')",
+      "authentication": {
+        "type": "Raw",
+        "scheme": "Key",
+        "parameter": "@appsetting('service-now-connectionKey')"
+      }
+    },
+    "visualstudioteamservices": {
+      "api": {
+        "id": "/subscriptions/@appsetting('WORKFLOWS_SUBSCRIPTION_ID')/providers/Microsoft.Web/locations/@appsetting('WORKFLOWS_LOCATION_NAME')/managedApis/visualstudioteamservices"
       },
-      "authentication": "@parameters('blob_auth')"
+      "connection": {
+        "id": "/subscriptions/@appsetting('WORKFLOWS_SUBSCRIPTION_ID')/resourceGroups/@appsetting('WORKFLOWS_RESOURCE_GROUP_NAME')/providers/Microsoft.Web/connections/@appsetting('DEVOPS_CONNECTION_NAME')"
+      },
+      "connectionRuntimeUrl": "@appsetting('DEVOPS_CONNECTION_RUNTIMEURL')",
+      "authentication": {
+        "type": "Raw",
+        "scheme": "Key",
+        "parameter": "@appsetting('visualstudioteamservices-connectionKey')"
+      }
+    },
+    "keyvault": {
+      "api": {
+        "id": "/subscriptions/@appsetting('WORKFLOWS_SUBSCRIPTION_ID')/providers/Microsoft.Web/locations/@appsetting('WORKFLOWS_LOCATION_NAME')/managedApis/keyvault"
+      },
+      "connection": {
+        "id": "/subscriptions/@appsetting('WORKFLOWS_SUBSCRIPTION_ID')/resourceGroups/@appsetting('WORKFLOWS_RESOURCE_GROUP_NAME')/providers/Microsoft.Web/connections/@appsetting('KEYVAULT_CONNECTION_NAME')"
+      },
+      "connectionRuntimeUrl": "@appsetting('KEYVAULT_CONNECTION_RUNTIMEURL')",
+      "authentication": {
+        "type": "Raw",
+        "scheme": "Key",
+        "parameter": "@appsetting('keyvault-connectionKey')"
+      }
     }
   }
 }
